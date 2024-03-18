@@ -8,6 +8,10 @@
         "vector": "cpp",
         "string_view": "cpp",
         "span": "cpp",
-        "new_year_chaos": "c"
+        "new_year_chaos": "c",
+        "*.tcc": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "forward_list": "cpp"
     }
 }
