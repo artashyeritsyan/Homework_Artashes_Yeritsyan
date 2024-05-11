@@ -36,7 +36,7 @@ public:
     T& front();
     T& back();
     T* data();
-
+  
     class My_Iterator {
     private:
         T* my_iter;
@@ -60,7 +60,6 @@ private:
     size_t _size;
     size_t _capacity;
 };
-
 
 #include "Vector.inl"
 
