@@ -19,7 +19,12 @@ template <typename T>
 My_Vector<T>::My_Vector(const My_Vector<T>& obj) {
     _size = obj._size;
     _capacity = obj._capacity;
-    _data = new T[_capacity];
+
+    _data = (T*) malloc(sizeof(T) * _capacity > 0 ? _capacity : 1);
+    if(_data == NULL) {
+        std::cerr << "Bad allocation" << std::endl;
+        return;
+    }
     
     for (size_t i = 0; i < _size; ++i) {
         _data[i] = obj._data[i];
@@ -28,8 +33,10 @@ My_Vector<T>::My_Vector(const My_Vector<T>& obj) {
 
 template <typename T>
 My_Vector<T>:: ~My_Vector () {
-    free(_data);
-    _data = NULL;
+    if (data) {
+        free(_data);
+        _data = NULL;
+    }
 }
 
 template <typename T>
@@ -107,7 +114,6 @@ void My_Vector<T>::insert(size_t position, T value) {
         _data[i + 1] = _data[i];
     }
     _data[position] = value;
-
     ++_size;
 }
 
@@ -124,15 +130,17 @@ void My_Vector<T>::erase(size_t position) {
 
 template <typename T>
 void My_Vector<T>::clear() {
+    free(_data);
+    _data = nullptr;
     _size = 0;
+    _capacity = 0;
 }
 
 template <typename T>
-void My_Vector<T>::swap(size_t first_position, size_t second_position) {   
-
-    T tmp_value = _data[first_position];
-    _data[first_position] = _data[second_position];
-    _data[second_position] = tmp_value;
+void My_Vector<T>::swap(My_Vector& obj) {   
+    My_Vector<T> tmp = obj;
+    obj = *this;
+    *this = tmp;
 }
 
 template <typename T>
@@ -141,7 +149,7 @@ bool My_Vector<T>:: empty() {
 }
 
 template <typename T>
-size_t My_Vector<T>:: size() {
+size_t My_Vector<T>:: size() const {
     return _size;
 }
 
@@ -182,8 +190,7 @@ void My_Vector<T>::resize(size_t size, T value) {
         _size = size;
     }
     else {
-        for (size_t i = 0; i < _size - size; i++)
-        {
+        for (size_t i = 0; i < _size - size; i++) {
             push_back(value);
         }
     }
@@ -221,6 +228,12 @@ T& My_Vector<T>::operator[] (size_t index) {
 }
 
 template <typename T>
+const T& My_Vector<T>::operator[] (size_t index) const {
+        return _data[index];
+}
+
+
+template <typename T>
 T& My_Vector<T>::at(size_t position) {
     if(position < _size) {
         return _data[position];
@@ -247,14 +260,14 @@ T* My_Vector<T>::data() {
 
 template <typename T>
 My_Vector<T>& My_Vector<T>::operator= (My_Vector<T>& obj) {
-    if(this != obj) {
+    if(this != &obj) {
         free(_data);
         _size = obj._size;
         _capacity = obj._capacity;
         _data = (T*) malloc(sizeof(T) * _capacity);
-            if(_data == NULL) {
-                throw("Bad allocation");
-            }
+        if(_data == NULL) {
+            throw("Bad allocation");
+        }
         
         for (size_t i = 0; i < _size; ++i) {
             _data[i] = obj._data[i];
@@ -262,6 +275,19 @@ My_Vector<T>& My_Vector<T>::operator= (My_Vector<T>& obj) {
     }
 
     return *this;
+}
+
+template <typename T>
+bool My_Vector<T>::operator!=(const My_Vector<T>& obj) const {
+    if (_size != obj._size) {
+        return true;
+    }
+    for (size_t i = 0; i < _size; ++i) {
+        if (_data[i] != obj._data[i]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 template <typename T>

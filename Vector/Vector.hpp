@@ -12,26 +12,24 @@ public:
     My_Vector(const My_Vector<T>& obj);
     ~My_Vector ();
 
-    // Capacity
-
-    size_t size();
+    size_t size() const;
     size_t capacity();
     bool empty();
     void reserve(size_t new_capacity);
     void resize(size_t size, T value = 0);
     void shrink_to_fit();
 
-    // Modifiers
-
     void push_back(T value);
     void pop_back();
     void insert(size_t position, T value = 0);
     void erase(size_t position);
     void clear();
-    void swap(size_t first_position, size_t second_position);
+    void swap(My_Vector& obj);
 
     T& operator[] (size_t index);
+    const T& operator[] (size_t index) const;
     My_Vector<T>& operator= (My_Vector<T>& obj);
+    bool operator!=(const My_Vector<T>& obj) const;
     T& at(size_t position);
     T& front();
     T& back();
@@ -56,9 +54,9 @@ public:
     My_Iterator end();
 private:
 
-    T* _data;
-    size_t _size;
-    size_t _capacity;
+    T* _data = nullptr;
+    size_t _size = 0;
+    size_t _capacity = 0;
 };
 
 
