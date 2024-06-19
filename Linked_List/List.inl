@@ -37,14 +37,10 @@ List<T>::~List(){
 
 template<typename T>
 void List<T>::push_back(const T& value){
-    Node *tmp_node = new Node;
+    Node *tmp_node = new Node(value);
     if(!tmp_node){
         std::bad_alloc();
     }
-
-    tmp_node -> data = value;
-    tmp_node -> prev = nullptr;
-    tmp_node -> next = nullptr;
 
     if(!head){
         head = tail = tmp_node;
@@ -60,14 +56,10 @@ void List<T>::push_back(const T& value){
 
 template<typename T>
 void List<T>::push_front(const T& value){
-    Node *tmp_node = new Node;
+    Node *tmp_node = new Node(value);
     if(!tmp_node){
         std::bad_alloc();
     }
-
-    tmp_node -> data = value;
-    tmp_node -> prev = nullptr;
-    tmp_node -> next = nullptr;
 
     if(!head){
         head = tail = tmp_node;
@@ -112,11 +104,6 @@ bool List<T>::empty() const {
 }
 
 template<typename T>
-size_t List<T>::max_size(){
-    return std::numeric_limits<T>::max();
-}
-
-template<typename T>
 size_t List<T>::size() const{
     return this -> _size;
 }
@@ -137,13 +124,12 @@ void List<T>::insert(size_t index, const T& value){
         for(size_t i = 0; i < index; ++i){
             current = current -> next;
         }
-        Node *tmp_node = new Node;
+        Node *tmp_node = new Node(value);
 
         if(!tmp_node){
             std::bad_alloc();
         }
 
-        tmp_node -> data = value;
         tmp_node -> prev = current -> prev;
         tmp_node -> next = current;
 
@@ -314,7 +300,7 @@ Node *tmp = head;
 
 template<typename T>
 List<T>& List<T>::operator=(const List<T>& obj){
-    if(this != obj){
+    if(*this != obj){
         clear();
 
         Node* tmp = obj.head;
@@ -407,10 +393,6 @@ List<T>::My_iterator::My_iterator(Node* obj) : ptr(obj) {prev = ptr -> prev;}
 
 template<typename T>
 List<T>::My_iterator::My_iterator(Node* obj1, Node* obj2) : ptr(obj1), prev(obj2) {}
-
-// template<typename T>
-// List<T>::My_iterator::My_iterator() : ptr(nullptr), prev(nullptr) {}
-
 
 template<typename T>
 T& List<T>::My_iterator::operator*(){
